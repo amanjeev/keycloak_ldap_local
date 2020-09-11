@@ -1,6 +1,6 @@
-# Keycloak: LDAP + local user registrations demo
+# Keycloak, LDAP, and local user registrations demo
 
-(Takes a lot from https://idaccessman.wordpress.com/2018/08/26/ldap-federation-with-keycloak/)
+![Diagram showing Keycloak, LDAP for existing accounts, and local storage for new registrations](./diagram.png)
 
 ## Running
 
@@ -37,6 +37,12 @@ When Keycloak up and running (when `docker-compose logs oidc_kc` shows `Admin co
  ```
 
 That restarts the IdP and so will take 20 seconds or so.
+
+Once configured, patch the Postgres database to make User's profile `Attributes` `Value` to be `VARCHAR`.
+
+```
+./oidc/modify_postgres.sh
+```
 
 ## Loging in as realm admin
 
