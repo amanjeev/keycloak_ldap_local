@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+for file in broker/config.sh broker/setup_keycloak_{realm,user_roles}.sh
+do
+    docker cp ${file} broker:/opt/jboss/$( basename ${file} )
+done
+
+docker exec broker /opt/jboss/setup_keycloak_realm.sh > config_broker.out
+docker-compose restart broker_kc
+sleep 20
+docker exec broker /opt/jboss/setup_keycloak_user_roles.sh >> config_broker.out

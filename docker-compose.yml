@@ -30,6 +30,37 @@ services:
     environment:
       POSTGRES_USER: keycloak
       POSTGRES_PASSWORD: keycloak
+      
+  broker_kc:
+    container_name: broker
+    image: jboss/keycloak
+    ports:
+      - "8090:8080"
+      - "8453:8443"
+    volumes:
+      - ./broker/tls.crt:/etc/x509/https/tls.crt
+      - ./broker/tls.key:/etc/x509/https/tls.key
+      - ./pgdatabroker:/opt/jboss/keycloak/standalone/data
+    environment:
+      KEYCLOAK_USER: kcadmin
+      KEYCLOAK_PASSWORD: admin
+      DB_VENDOR: POSTGRES
+      DB_ADDR: postgresdbbroker
+      DB_DATABASE: keycloak
+      DB_USER: keycloak
+      DB_PASSWORD: keycloak
+
+  postgresdbbroker:
+    container_name: postgresdbbroker
+    image: postgres
+    ports:
+      - "5442:5432"
+    restart: always
+    volumes:
+      - ./broker/setup_postgres.sh:/tmp/setup_postgres.sh
+    environment:
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: keycloak
 
   ldap_mock:
     container_name: ldap
